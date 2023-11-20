@@ -64,6 +64,12 @@ Using the `ghci` session that `ghcid` manages you can also evaluate expressions:
 
 Expressions that read from standard input are likely to hang, given that Ghcid already uses the standard input to interact with Ghci.
 
+### Hacking
+
+You can use `ghcid` on `ghcid` with:
+
+    ghcid -c 'cabal repl ghcid_tests'
+
 ### FAQ
 
 #### This isn't as good as full IDE
