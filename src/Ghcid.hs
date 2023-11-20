@@ -15,6 +15,7 @@ import Data.Tuple.Extra
 import Data.Version
 import Session
 import Types (Continue(..), ColorMode(..), ReloadMode(..), Options(..), TermSize(..))
+import Term (prettyOutput)
 import qualified System.Console.Terminal.Size as Term
 import System.Console.CmdArgs
 import System.Console.CmdArgs.Explicit
@@ -400,28 +401,6 @@ runGhcid session waiter termSize termOutput opts@Options{..} = do
                 pure Continue
 
     fire nextWait (messages, loaded, loaded)
-
-
--- | Given an available height, and a set of messages to display, show them as best you can.
-prettyOutput :: String -> Int -> [Load] -> [EvalResult] -> [String]
-prettyOutput currTime loadedCount [] evals =
-    (allGoodMessage ++ " (" ++ show loadedCount ++ " module" ++ ['s' | loadedCount /= 1] ++ ", at " ++ currTime ++ ")")
-        : concatMap printEval evals
-prettyOutput _ _ xs evals = concatMap loadMessage xs ++ concatMap printEval evals
-
-printEval :: EvalResult -> [String]
-printEval (EvalResult file (line, col) msg result) =
-  [ " "
-    , concat
-        [ file
-        , ":"
-        , show line
-        , ":"
-        , show col
-        ]
-    ] ++ map ("$> " ++) (lines msg)
-      ++ lines result
-
 
 showJSON :: [(String, [String])] -> String
 showJSON xs = unlines $ concat $

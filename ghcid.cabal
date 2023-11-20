@@ -74,6 +74,7 @@ executable ghcid
         Language.Haskell.Ghcid
         Paths_ghcid
         Session
+        Term
         Types
         Wait
         -- not so multi only
@@ -109,6 +110,7 @@ executable ghcid-multi
         Language.Haskell.Ghcid
         Paths_ghcid
         Session
+        Term
         Types
         Wait
         -- multi only
@@ -149,6 +151,7 @@ test-suite ghcid_test
         Language.Haskell.Ghcid.Util
         Paths_ghcid
         Session
+        Term
         Types
         Test.API
         Test.Common
