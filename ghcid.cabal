@@ -74,6 +74,7 @@ executable ghcid
         Language.Haskell.Ghcid
         Paths_ghcid
         Session
+        Types
         Wait
         -- not so multi only
         Multi
@@ -108,6 +109,7 @@ executable ghcid-multi
         Language.Haskell.Ghcid
         Paths_ghcid
         Session
+        Types
         Wait
         -- multi only
         Cabal
@@ -147,6 +149,7 @@ test-suite ghcid_test
         Language.Haskell.Ghcid.Util
         Paths_ghcid
         Session
+        Types
         Test.API
         Test.Common
         Test.Ghcid
