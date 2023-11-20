@@ -97,6 +97,8 @@ executable ghcid-multi
         cmdargs >= 0.10,
         ansi-terminal,
         terminal-size >= 0.3
+        -- multi
+      , text
     if os(windows)
         build-depends: Win32 >= 2.13.2.1
     else
@@ -137,6 +139,8 @@ test-suite ghcid_test
         cmdargs,
         tasty,
         tasty-hunit
+        -- multi
+      , text
     if os(windows)
         build-depends: Win32
     else
