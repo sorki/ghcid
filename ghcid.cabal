@@ -151,3 +151,6 @@ test-suite ghcid_test
         Test.Parser
         Test.Util
         Wait
+        -- multi only
+        Cabal
+        Multi
