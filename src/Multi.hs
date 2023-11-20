@@ -31,7 +31,8 @@
 -- ** might be easier/prettier with brick (but extra dep)
 --
 -- * Extra features
--- ** There probably is a GHC error parser somewhere (M$?, GH runners do it)
+-- ** There probably is a GHC error parser somewhere
+--     -> Language.Haskell.Ghcid.Parser ... ^^
 -- *** This would allow us to prefix filepaths with the sub-projects dir
 -- ** Benchmarks
 -- ** Haddocks
