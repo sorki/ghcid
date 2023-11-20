@@ -76,6 +76,38 @@ executable ghcid
         Session
         Wait
 
+executable ghcid-multi
+    hs-source-dirs: src
+    default-language: Haskell2010
+    ghc-options: -main-is Ghcid.multiMain -threaded -rtsopts
+    main-is: Ghcid.hs
+    build-depends:
+        base >= 4.7 && < 5,
+        filepath,
+        time >= 1.5,
+        directory >= 1.2,
+        containers,
+        fsnotify >= 0.4,
+        extra >= 1.6.20,
+        process >= 1.1,
+        cmdargs >= 0.10,
+        ansi-terminal,
+        terminal-size >= 0.3
+    if os(windows)
+        build-depends: Win32 >= 2.13.2.1
+    else
+        build-depends: unix
+    other-modules:
+        Language.Haskell.Ghcid.Escape
+        Language.Haskell.Ghcid.Parser
+        Language.Haskell.Ghcid.Terminal
+        Language.Haskell.Ghcid.Types
+        Language.Haskell.Ghcid.Util
+        Language.Haskell.Ghcid
+        Paths_ghcid
+        Session
+        Wait
+
 test-suite ghcid_test
     type:            exitcode-stdio-1.0
     hs-source-dirs:  src

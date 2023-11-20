@@ -2,7 +2,7 @@
 {-# OPTIONS_GHC -fno-cse #-}
 
 -- | The application entry point
-module Ghcid(main, mainWithTerminal, TermSize(..), WordWrap(..)) where
+module Ghcid(main, multiMain, mainWithTerminal, TermSize(..), WordWrap(..)) where
 
 import Control.Exception
 import System.IO.Error
@@ -278,6 +278,8 @@ outputToTerm xs = do
     outStr $ concatMap ('\n':) xs
     hFlush stdout -- must flush, since we don't finish with a newline
 
+multiMain :: IO ()
+multiMain = mainWithTerminal getTermSize outputToTerm
 
 data Continue = Continue
 
