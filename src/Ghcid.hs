@@ -36,6 +36,8 @@ import Wait
 
 import Prelude
 
+import qualified Multi
+
 
 -- | Command line options
 data Options = Options
@@ -210,6 +212,16 @@ printStopped opts =
 -- | Like 'main', but run with a fake terminal for testing
 mainWithTerminal :: IO TermSize -> ([String] -> IO ()) -> IO ()
 mainWithTerminal termSize termOutput = do
+  mainWithTerminal' termSize termOutput runGhcid
+
+-- | Prime variant of `mainWithTerminal` that allows to use custom runner function
+mainWithTerminal'
+  :: IO TermSize
+  -> ([String] -> IO ())
+  -> (Session -> Waiter -> IO TermSize -> ([String] -> IO ()) -> Options -> IO Continue)
+  -- ^ runGhcid type
+  -> IO ()
+mainWithTerminal' termSize termOutput runner = do
     opts <- withGhcidArgs $ cmdArgsRun options
     whenLoud $ do
         outStrLn $ "%OS: " ++ os
@@ -258,9 +270,7 @@ mainWithTerminal termSize termOutput = do
                     else id
 
                 maybe withWaiterNotify withWaiterPoll (poll opts) $ \waiter ->
-                    runGhcid (if allow_eval opts then enableEval session else session) waiter termSize (clear . termOutput . restyle) opts
-
-
+                    runner (if allow_eval opts then enableEval session else session) waiter termSize (clear . termOutput . restyle) opts
 
 main :: IO ()
 main = mainWithTerminal getTermSize outputToTerm
@@ -279,7 +289,7 @@ outputToTerm xs = do
     hFlush stdout -- must flush, since we don't finish with a newline
 
 multiMain :: IO ()
-multiMain = mainWithTerminal getTermSize outputToTerm
+multiMain = mainWithTerminal' getTermSize outputToTerm Multi.runGhcids
 
 data Continue = Continue
 

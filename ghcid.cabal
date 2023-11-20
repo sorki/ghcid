@@ -75,6 +75,8 @@ executable ghcid
         Paths_ghcid
         Session
         Wait
+        -- not so multi only
+        Multi
 
 executable ghcid-multi
     hs-source-dirs: src

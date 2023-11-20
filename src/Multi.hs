@@ -41,4 +41,15 @@
 
 module Multi where
 
+import Session
+import Wait
+
+--runGhcids
+--  :: Session
+--  -> Waiter
+--  -> IO TermSize
+--  -> ([String] -> IO ())
+--  -- ^ output to terminal
+--  -> Options
+--  -> IO Continue
 runGhcids = undefined
