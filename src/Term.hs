@@ -39,7 +39,8 @@ outputFill' Options{reverse_errors} termSize termOutput currTime load evals msg 
                                  fmap reverse . takeRemainder termHeight . reverse
                             else takeRemainder termHeight
                     in pure $ takeRemainder' $ wrap load
-                pure (msg, load, replicate termHeight "")
+                pure (msg, load, replicate 0 "")
+                --pure (msg, load, replicate termHeight "")
     let mergeSoft ((Esc x,WrapSoft):(Esc y,q):xs) = mergeSoft $ (Esc (x++y), q) : xs
         mergeSoft ((x,_):xs) = x : mergeSoft xs
         mergeSoft [] = []
