@@ -107,6 +107,9 @@ executable ghcid-multi
         Paths_ghcid
         Session
         Wait
+        -- multi only
+        Cabal
+        Multi
 
 test-suite ghcid_test
     type:            exitcode-stdio-1.0
