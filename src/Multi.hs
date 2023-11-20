@@ -67,6 +67,7 @@ import Language.Haskell.Ghcid.Escape (unescape)
 import Language.Haskell.Ghcid.Types (EvalResult, Load(..), Severity(..), isMessage)
 import Language.Haskell.Ghcid.Util (allGoodMessage, ghciFlagsUseful, ghciFlagsUsefulVersioned, getModTime, getShortTime, outStrLn)
 
+import qualified Cabal
 
 runGhcids
   :: Session
@@ -77,10 +78,10 @@ runGhcids
   -> Options
   -> IO Continue
 runGhcids session waiter termSize termOutput opts@Options{..} = do
-  let limitMessages = maybe id (take . max 1) max_messages
-
   let outputFill :: String -> Maybe (Int, [Load]) -> [EvalResult] -> [String] -> IO ()
       outputFill = outputFill' opts termSize termOutput
+
+  subprojects <- Cabal.parseSubprojectsWithTargets
 
   nextWait <- waitFiles waiter
   (messages, loaded) <- sessionStart session command $
@@ -118,9 +119,6 @@ runGhcids session waiter termSize termOutput opts@Options{..} = do
               if null test || hasErrors then Nothing
               else Just $ intercalate "\n" test
 
---          unless no_title $ setWindowIcon $
---              if countErrors > 0 then IconError else if countWarnings > 0 then IconWarning else IconOK
-
           let updateTitle extra = unless no_title $ setTitle $ unescape $
                   let f n msg = if n == 0 then "" else show n ++ " " ++ msg ++ ['s' | n > 1]
                   in (if countErrors == 0 && countWarnings == 0 then allGoodMessage ++ ", at " ++ currTime else f countErrors "error" ++
@@ -140,12 +138,6 @@ runGhcids session waiter termSize termOutput opts@Options{..} = do
               pure $ (if reverse_errors then reverse else id) moduleSorted
 
           outputFill currTime (Just (loadedCount, ordMessages)) evals [test_message | isJust test]
-          --forM_ outputfile $ \file ->
-          --    writeFile file $
-          --        if takeExtension file == ".json" then
-          --            showJSON [("loaded",map jString loaded),("messages",map jMessage $ filter isMessage messages)]
-          --        else
-          --            unlines $ map unescape $ prettyOutput currTime loadedCount (limitMessages ordMessages) evals
           when (null loaded && not ignoreLoaded) $ do
               putStrLn "No files loaded, nothing to wait for. Fix the last error and restart."
               exitFailure
@@ -156,17 +148,9 @@ runGhcids session waiter termSize termOutput opts@Options{..} = do
                   hFlush stdout -- may not have been a terminating newline from test output
                   if "*** Exception: " `isPrefixOf` stderr then do
                       updateTitle "(test failed)"
-                      --setWindowIcon IconError
                    else do
                       updateTitle "(test done)"
                       whenNormal $ outStrLn "\n...done"
-          --whenJust lint $ \lintcmd ->
-          --    unless hasErrors $ do
-          --        (exitcode, stdout, stderr) <- readCreateProcessWithExitCode (shell . unwords $ lintcmd : map escape touched) ""
-          --        unless (exitcode == ExitSuccess) $ do
-          --            let output = stdout ++ stderr
-          --            outStrLn output
-          --            forM_ outputfile $ flip writeFile output
 
           reason <- nextWait $ map (,Restart) restart
                             ++ map (,Reload) reload
