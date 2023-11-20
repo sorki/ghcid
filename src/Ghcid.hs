@@ -263,17 +263,20 @@ mainWithTerminal termSize termOutput = do
 
 
 main :: IO ()
-main = mainWithTerminal termSize termOutput
-    where
-        termSize = do
-            x <- Term.size
-            pure $ case x of
-                Nothing -> TermSize 80 (Just 8) WrapHard
-                Just t -> TermSize (Term.width t) (Just $ Term.height t) WrapSoft
+main = mainWithTerminal getTermSize outputToTerm
 
-        termOutput xs = do
-            outStr $ concatMap ('\n':) xs
-            hFlush stdout -- must flush, since we don't finish with a newline
+getTermSize :: IO TermSize
+getTermSize = do
+    x <- Term.size
+    pure $ case x of
+        Nothing -> TermSize 80 (Just 8) WrapHard
+        Just t -> TermSize (Term.width t) (Just $ Term.height t) WrapSoft
+
+
+outputToTerm :: [String] -> IO ()
+outputToTerm xs = do
+    outStr $ concatMap ('\n':) xs
+    hFlush stdout -- must flush, since we don't finish with a newline
 
 
 data Continue = Continue
