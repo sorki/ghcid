@@ -282,6 +282,9 @@ data ReloadMode = Reload | Restart deriving (Show, Ord, Eq)
 
 -- If we return successfully, we restart the whole process
 -- Use Continue not () so that inadvertant exits don't restart
+--
+-- Spawns a GHCI @Session@, that returns a list of files
+-- to watch which is passed to @Waiter@
 runGhcid :: Session -> Waiter -> IO TermSize -> ([String] -> IO ()) -> Options -> IO Continue
 runGhcid session waiter termSize termOutput opts@Options{..} = do
     let limitMessages = maybe id (take . max 1) max_messages
