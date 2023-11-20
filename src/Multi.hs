@@ -18,6 +18,7 @@
 --       and only restart the ones that need it
 -- **** algebraic-graphs
 -- **** fgl
+-- **** Data.Graph from containers and we don't need any extra deps
 --
 -- * Test-suites
 -- ** for type: exitcode-stdio just run main-is: <main>.main
